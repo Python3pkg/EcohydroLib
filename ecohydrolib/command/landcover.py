@@ -57,7 +57,7 @@ DEFAULT_LC_TYPE = 'NLCD2011'
 
 class USGSWCSNLCD(Command):
     
-    SUPPORTED_COVERAGES = ecohydrolib.usgs.nlcdwcs.COVERAGES.keys()
+    SUPPORTED_COVERAGES = list(ecohydrolib.usgs.nlcdwcs.COVERAGES.keys())
     DEFAULT_COVERAGE = ecohydrolib.usgs.nlcdwcs.DEFAULT_COVERAGE
     
     def __init__(self, projectDir, configFile=None, outfp=sys.stdout):

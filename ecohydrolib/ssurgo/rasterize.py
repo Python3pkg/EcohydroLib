@@ -41,7 +41,7 @@ from ecohydrolib.spatialdata.utils import getSpatialReferenceForRaster
 from ecohydrolib.spatialdata.utils import getMeterConversionFactorForLinearUnitOfShapefile
 from ecohydrolib.spatialdata.utils import getMeterConversionFactorForLinearUnitOfGMLfile
 
-import attributequery
+from . import attributequery
 
 RASTER_ATTRIBUTES = attributequery.ATTRIBUTE_LIST_NUMERIC
 # Depth to bed rock from MapunitPolyExtended
@@ -56,7 +56,7 @@ def deleteSoilRasters(context, manifest):
         @param manifest Dict containing manifest entries.  Files associted with entries
         whose key begins with 'soil_raster_' will be deleted
     """
-    for entry in manifest.keys():
+    for entry in list(manifest.keys()):
         if entry.find('soil_raster_') == 0:
             filePath = os.path.join( context.projectDir, manifest[entry] )
             deleteGeoTiff(filePath)

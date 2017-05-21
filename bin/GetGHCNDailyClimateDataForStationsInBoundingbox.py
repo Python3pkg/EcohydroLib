@@ -113,7 +113,7 @@ bbox = bboxFromString(studyArea['bbox_wgs84'])
 
 # Find all GHCN stations within bounding box
 stations = findStationsWithinBoundingBox(context.config, bbox)
-print "Found %d stations in bounding box, downloading data..." % (len(stations))
+print("Found %d stations in bounding box, downloading data..." % (len(stations)))
 # Get data for each station
 for station in stations:
     outFile = os.path.join(outDir, station[0])

@@ -45,7 +45,7 @@ GHCNDSetup.py -o <output_dir>
 """
 import os, sys, errno
 import argparse
-import urllib
+import urllib.request, urllib.parse, urllib.error
 import re
 from pyspatialite import dbapi2 as spatialite
 
@@ -101,26 +101,26 @@ sys.stdout.flush()
 
 # 2. Fetch station metadata
 sys.stdout.write("Downloading station data from NCDC (this may take a while)...")
-f = urllib.urlopen(url)
+f = urllib.request.urlopen(url)
 
 # 3. Insert station metadata into database
 line = f.readline()
 while line:
     line.strip()
     #sys.stdout.write(line)
-    id = unicode(line[:11].strip(), errors='replace')
+    id = str(line[:11].strip(), errors='replace')
     id = re.sub(_sanitizeString, '', id) # A poor substitute for proper escapeing, but SQLite3 python module sucks in this regard
     lat = float(line[12:19].strip())
     lon = float(line[21:29].strip())
     elev = float(line[31:36].strip())
-    name = unicode(line[41:70].strip(), errors='replace')
+    name = str(line[41:70].strip(), errors='replace')
     name = re.sub(_sanitizeString, '', name) # A poor substitute for proper escapeing, but SQLite3 python module sucks in this regard
     
     # SQLite can't handle parameter substitution within quotes (e.g. GeomFromText('POINT(:lon :lat)')
     #    cursor.execute("INSERT INTO ghcn_station (id,name,elevation_m,coord) VALUES (:id,:name,:elevation_m,GeomFromText('POINT(:lon :lat)', :srs) )",
     #                   {"id": id, "name": name, "elevation_m": elev, "lon": lon, "lat": lat, "srs": SRS})
     # So we have to do it the dangerous way ...
-    sql = u"INSERT INTO ghcn_station (id,name,elevation_m,coord) VALUES ('%s','%s',%f,GeomFromText('POINT(%f %f)', %d) )" % \
+    sql = "INSERT INTO ghcn_station (id,name,elevation_m,coord) VALUES ('%s','%s',%f,GeomFromText('POINT(%f %f)', %d) )" % \
         (id, name, elev, lon, lat, SRS)
     #print("sql to exec: %s\n" % (sql,) )
     cursor.execute(sql)

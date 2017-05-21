@@ -37,7 +37,7 @@ import os, errno
 import sys
 
 import socket
-import httplib
+import http.client
 import json
 import textwrap
 import tempfile, shutil
@@ -77,7 +77,7 @@ def locateStreamflowGage(config, gageid):
     url = URL_PROTO_GAGE_LOC.format(gageid=gageid)
     urlFetched = "http://%s%s" % (HOST, url)
     
-    conn = httplib.HTTPConnection(HOST)
+    conn = http.client.HTTPConnection(HOST)
     try:
         conn.request('GET', url)
         res = conn.getresponse(buffering=False)
@@ -148,7 +148,7 @@ def getCatchmentFeaturesForStreamflowGage(config, outputDir,
         raise IOError(errno.EACCES, "Not allowed to write to output directory %s" % (outputDir,))
     outputDir = os.path.abspath(outputDir)
     
-    if not format in OGR_DRIVERS.keys():
+    if not format in list(OGR_DRIVERS.keys()):
         raise Exception("Output format '%s' is not known" % (format,) )
     
     catchmentFilename ="%s%s%s" % ( catchmentFilename, os.extsep, OGR_DRIVERS[format] )
@@ -157,7 +157,7 @@ def getCatchmentFeaturesForStreamflowGage(config, outputDir,
     url = URL_PROTO_CATCHMENT.format( reachcode=reachcode, measure=str(measure) )
     urlFetched = "http://%s%s" % (HOST, url)
     
-    conn = httplib.HTTPConnection(HOST)
+    conn = http.client.HTTPConnection(HOST)
     try:
         conn.request('GET', url)
         res = conn.getresponse(buffering=True)

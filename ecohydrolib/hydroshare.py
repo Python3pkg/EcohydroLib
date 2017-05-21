@@ -52,7 +52,7 @@ def create_console_callback(size):
     @param size int representing the number of bytes to be read be the
     MultipartEncoderMonitor
     """
-    bar = Bar(expected_size=size, filled_char=u'\u25A0', every=1024)
+    bar = Bar(expected_size=size, filled_char='\u25A0', every=1024)
     def callback(monitor):
         bar.show(monitor.bytes_read)
     return callback
@@ -79,7 +79,8 @@ def _getResourceURL(resource_id, hs_host='www.hydroshare.org', hs_port=None, use
                                                      id=resource_id)
     return url
 
-def _addToZip((project_dir, zfile), dirname, names):
+def _addToZip(xxx_todo_changeme, dirname, names):
+    (project_dir, zfile) = xxx_todo_changeme
     clean_dir = os.path.relpath(dirname, project_dir)
     for name in names:
         filename = os.path.join(dirname, name)

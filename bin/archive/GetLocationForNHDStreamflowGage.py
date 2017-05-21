@@ -16,7 +16,7 @@ import os
 import sys
 import errno
 import argparse
-import ConfigParser
+import configparser
 
 from nhdplus2lib.networkanalysis import getLocationForStreamGageByGageSourceFea
 
@@ -31,7 +31,7 @@ args = parser.parse_args()
 if not os.access(args.configfile, os.R_OK):
     raise IOError(errno.EACCES, "Unable to read configuration file %s" %
                   args.configfile)
-config = ConfigParser.RawConfigParser()
+config = configparser.RawConfigParser()
 config.read(args.configfile)
 
 if not config.has_option('NHDPLUS2', 'PATH_OF_NHDPLUS2_GAGELOC'):
@@ -40,6 +40,6 @@ if not config.has_option('NHDPLUS2', 'PATH_OF_NHDPLUS2_GAGELOC'):
 
 result = getLocationForStreamGageByGageSourceFea(config, args.gageid)
 if result:
-    print "%s %s" % (result[0], result[1])
+    print("%s %s" % (result[0], result[1]))
 else:
-    print "Gage not found"
+    print("Gage not found")

@@ -30,5 +30,5 @@ shapefile = os.path.abspath(args.shapefile)
 
 # Get bounding box
 bbox = getBoundingBoxForShapefile(shapefile)
-print "%f %f %f %f" % (bbox['minX'], bbox['minY'], bbox['maxX'], bbox['maxY'])
+print("%f %f %f %f" % (bbox['minX'], bbox['minY'], bbox['maxX'], bbox['maxY']))
 

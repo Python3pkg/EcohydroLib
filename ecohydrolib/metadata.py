@@ -38,7 +38,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 import os
 import time
 import errno
-import ConfigParser
+import configparser
 from datetime import datetime
 
 import ecohydrolib
@@ -143,7 +143,7 @@ class ClimatePointStation(MetadataEntity):
             keys.append(data); values.append(self.data)
         elif self.variablesData:
             # Try to write data entries for each variable separately
-            vars = self.variablesData.keys()
+            vars = list(self.variablesData.keys())
             for var in vars:
                 varKey = keyProto + var + GenericMetadata.COMPOUND_KEY_SEP + 'data'
                 keys.append(varKey); values.append(self.variablesData[var])
@@ -390,7 +390,7 @@ class AssetProvenance(MetadataEntity):
         return newInstance
     
 
-class MetadataVersionError(ConfigParser.Error):
+class MetadataVersionError(configparser.Error):
     def __init__(self, metadataVersion):
         self.metadataVersion = metadataVersion
         self._ecohydrolibVersion = ecohydrolib.__version__
@@ -483,7 +483,7 @@ class GenericMetadata(object):
                 raise IOError(errno.EACCES, "Unable to read metadata store for project %s" % \
                               (projectDir,))
             # Read metadata store
-            config = ConfigParser.RawConfigParser()
+            config = configparser.RawConfigParser()
             config.read(metadataFilepath)
             if config.has_section(GenericMetadata.ECOHYDROLIB_SECION):
                 if config.has_option(GenericMetadata.ECOHYDROLIB_SECION, \
@@ -557,7 +557,7 @@ class GenericMetadata(object):
         open(lockFilepath, 'w').close()
         
         # Read metadata store
-        config = ConfigParser.RawConfigParser()
+        config = configparser.RawConfigParser()
         config.read(metadataFilepath)
         GenericMetadata._writeVersionToMetadata(config)
         
@@ -617,7 +617,7 @@ class GenericMetadata(object):
         open(lockFilepath, 'w').close()
         
         # Read metadata store
-        config = ConfigParser.RawConfigParser()
+        config = configparser.RawConfigParser()
         config.read(metadataFilepath)
         GenericMetadata._writeVersionToMetadata(config)
         
@@ -678,7 +678,7 @@ class GenericMetadata(object):
         open(lockFilepath, 'w').close()
         
         # Read metadata store
-        config = ConfigParser.RawConfigParser()
+        config = configparser.RawConfigParser()
         config.read(metadataFilepath)
         GenericMetadata._writeVersionToMetadata(config)
         
@@ -688,7 +688,7 @@ class GenericMetadata(object):
         # Write new entries
         if not config.has_section(section):
             config.add_section(section)
-        for i in xrange(numKeys):
+        for i in range(numKeys):
             config.set(section, keys[i], values[i])
         # Write metadata store
         config.write(open(metadataFilepath, 'w'))
@@ -973,7 +973,7 @@ class GenericMetadata(object):
                 raise IOError(errno.EACCES, "Unable to read metadata store for project %s" % \
                               (projectDir,))
             # Read metadata store
-            config = ConfigParser.RawConfigParser()
+            config = configparser.RawConfigParser()
             config.read(metadataFilepath)
             if config.has_section(section):
                 items = config.items(section)
@@ -1150,7 +1150,7 @@ class GenericMetadata(object):
         history = GenericMetadata._readEntriesForSection(projectDir, GenericMetadata.HISTORY_SECTION)
         try:
             idx = int(history['numsteps']) + 1
-            for i in xrange(1, idx):
+            for i in range(1, idx):
                 key = GenericMetadata.HISTORY_PROTO + str(i)
                 steps.append(history[key])
         except KeyError:

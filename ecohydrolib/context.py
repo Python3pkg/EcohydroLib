@@ -34,7 +34,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 @author Brian Miles <brian_miles@unc.edu>
 """
 import os, errno
-import ConfigParser
+import configparser
 
 from ecohydrolib.metadata import GenericMetadata
 
@@ -81,5 +81,5 @@ class Context(object):
         if not os.access(self._configFile, os.R_OK):
             raise IOError(errno.EACCES, "Unable to read configuration file %s" %
                           self._configFile)
-        self.config = ConfigParser.RawConfigParser()
+        self.config = configparser.RawConfigParser()
         self.config.read(self._configFile)

@@ -45,4 +45,4 @@ import textwrap
 msg = "This module is deprecated as the underlying WCS4DEM service is no longer available. " +  \
       "Use GetUSGSDEMForBoundingbox.py for U.S.-based elevation data or GetGADEMForBoundingBox.py " + \
       "for Australian elevation data."
-print("\n" + textwrap.fill(msg) + "\n")
+print(("\n" + textwrap.fill(msg) + "\n"))

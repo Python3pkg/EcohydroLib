@@ -50,10 +50,10 @@ from ecohydrolib.spatialdata.utils import convertGMLToGeoJSON
 from ecohydrolib.spatialdata.utils import mergeFeatureLayers
 from ecohydrolib.spatialdata.utils import convertGeoJSONToShapefile
 from ecohydrolib.spatialdata.utils import OGR_SHAPEFILE_DRIVER_NAME
-from attributequery import getParentMatKsatTexturePercentClaySiltSandForComponentsInMUKEYs
-from attributequery import joinSSURGOAttributesToFeaturesByMUKEY_GeoJSON
-from attributequery import computeWeightedAverageKsatClaySandSilt
-from saxhandlers import SSURGOFeatureHandler       
+from .attributequery import getParentMatKsatTexturePercentClaySiltSandForComponentsInMUKEYs
+from .attributequery import joinSSURGOAttributesToFeaturesByMUKEY_GeoJSON
+from .attributequery import computeWeightedAverageKsatClaySandSilt
+from .saxhandlers import SSURGOFeatureHandler       
 
 MAX_SSURGO_EXTENT = 10100000000 # 10,100,000,000 sq. meters
 MAX_SSURGO_EXTENT = MAX_SSURGO_EXTENT / 4.0 # Large queries take a long time, reduce threshold for tiling

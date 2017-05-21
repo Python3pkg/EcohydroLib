@@ -58,7 +58,7 @@ import ecohydrolib.usgs.demwcs
 
 class USGSWCSDEM(Command):
     
-    SUPPORTED_COVERAGES = ecohydrolib.usgs.demwcs.COVERAGES.keys()
+    SUPPORTED_COVERAGES = list(ecohydrolib.usgs.demwcs.COVERAGES.keys())
     DEFAULT_COVERAGE = ecohydrolib.usgs.demwcs.DEFAULT_COVERAGE
     
     DEFAULT_RASTER_RESAMPLE_METHOD = ecohydrolib.usgs.demwcs.DEFAULT_RASTER_RESAMPLE_METHOD

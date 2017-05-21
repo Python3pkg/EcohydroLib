@@ -42,7 +42,7 @@ import os, sys, errno
 from math import sqrt
 import math
 import re
-import ConfigParser
+import configparser
 from subprocess import *
 
 from osgeo.gdalconst import *
@@ -397,7 +397,7 @@ def rescaleRaster(config, outputDir, inRasterFilepath, outRasterFilename, \
     gdalBase = None
     try:
         gdalBase = config.get('GDAL/OGR', 'GDAL_BASE')
-    except ConfigParser.NoOptionError:
+    except configparser.NoOptionError:
         gdalBase = os.path.dirname(config.get('GDAL/OGR', 'PATH_OF_GDAL_WARP'))
     
     # Get GDAL version
@@ -572,7 +572,7 @@ def mergeFeatureLayers(config, outputDir, featureFilepaths, outLayerName,
     """
     pathToOgrCmd = config.get('GDAL/OGR', 'PATH_OF_OGR2OGR')
     
-    assert(outFormat in OGR_DRIVERS.keys())
+    assert(outFormat in list(OGR_DRIVERS.keys()))
     
     if not os.path.isdir(outputDir):
         raise IOError(errno.ENOTDIR, "Output directory %s is not a directory" % (outputDir,))
@@ -823,13 +823,13 @@ def calculateBoundingBoxArea(bbox, srs=WGS84_EPSG_STR):
               (bbox['maxX'], bbox['minY']),
               (bbox['maxX'], bbox['maxY']), 
               (bbox['minX'], bbox['maxY'])]
-    (lon, lat) = zip(*coords)
+    (lon, lat) = list(zip(*coords))
     if bbox['srs'] != srs:
         p_in = Proj(init=bbox['srs'])
         p_out = Proj(init=srs)
         (lon, lat) = transform(p_in, p_out, lon, lat)
         
-    geojson = {'type': 'Polygon', 'coordinates': [zip(lon, lat)]}
+    geojson = {'type': 'Polygon', 'coordinates': [list(zip(lon, lat))]}
     poly = shape(geojson)
     
     return poly.area

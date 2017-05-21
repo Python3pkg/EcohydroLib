@@ -39,9 +39,9 @@ import sys
 import shutil
 from math import floor, ceil
 import xml.sax
-import urlparse
+import urllib.parse
 import socket
-import httplib
+import http.client
 import tempfile
 import textwrap
 
@@ -125,7 +125,7 @@ def getDEMForBoundingBox(config, outputDir, outFilename, bbox, srs, coverage=DEF
         @return Tuple(True if raster data were fetched and False if not, URL of raster fetched)
     """
     dataFetched = False
-    assert(coverage in COVERAGES.keys())
+    assert(coverage in list(COVERAGES.keys()))
     assert('minX' in bbox)
     assert('minY' in bbox)
     assert('maxX' in bbox)
@@ -203,7 +203,7 @@ def getDEMForBoundingBox(config, outputDir, outFilename, bbox, srs, coverage=DEF
     coverage_url = usgs_dem_coverage_handler.coverage_url
     if coverage_url is None:
         raise Exception("Unable to deteremine coverage URL from WCS server response.  Response text was: {0}".format(r.text))
-    parsed_coverage_url = urlparse.urlparse(coverage_url)
+    parsed_coverage_url = urllib.parse.urlparse(coverage_url)
     
     if verbose:
         outfp.write("Downloading DEM coverage from {0} ...\n".format(coverage_url))
@@ -214,7 +214,7 @@ def getDEMForBoundingBox(config, outputDir, outFilename, bbox, srs, coverage=DEF
     tmp_out = open(tmp_cov_name, mode='w+b')
     
     #ORG conn = httplib.HTTPConnection(parsed_coverage_url.netloc)
-    conn = httplib.HTTPSConnection(parsed_coverage_url.netloc)
+    conn = http.client.HTTPSConnection(parsed_coverage_url.netloc)
     try:
         conn.request('GET', parsed_coverage_url.path)
         res = conn.getresponse(buffering=True)

@@ -78,7 +78,7 @@ class GRASSConfig(object):
             os.makedirs(self.dbase)
         else:
             if not os.access(self.dbase, os.W_OK):
-                raise(errno.EACCES, "Not allowed to write to %s" % (self.dbase,))
+                raise errno.EACCES
         # Check if location already exists, if it does, raise an error if newLocation == True
         self.location = location
     

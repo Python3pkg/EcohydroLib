@@ -34,7 +34,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 @author Brian Miles <brian_miles@unc.edu>
 """
 import os, sys
-import urllib
+import urllib.request, urllib.parse, urllib.error
 import traceback
 
 from owslib.wcs import WebCoverageService
@@ -115,7 +115,7 @@ def getNLCDRasterDataForBoundingBox(config, outputDir, bbox,
         raise Exception("Coverage {0} is not known".format(coverage))
     if interpolation not in INTERPOLATION_METHODS:
         raise Exception("Interpolation method {0} is not of a known method {1}".format(interpolation,
-                                                                                       INTERPOLATION_METHODS.keys()))
+                                                                                       list(INTERPOLATION_METHODS.keys())))
     if fmt not in FORMATS:
         raise Exception("Format {0} is not of a known format {1}".format(fmt, str(FORMATS)))
     if verbose:
@@ -146,7 +146,7 @@ def getNLCDRasterDataForBoundingBox(config, outputDir, bbox,
                                 format=fmt,
                                 interpolation=INTERPOLATION_METHODS[interpolation],
                                 **{'band': '1'})
-        url = urllib.unquote(wcsfp.geturl())
+        url = urllib.parse.unquote(wcsfp.geturl())
         f = open(outFilepath, 'wb')
         f.write(wcsfp.read())
         f.close()

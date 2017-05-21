@@ -73,6 +73,6 @@ def getNLCDForBoundingBox(config, outputDir, outNLCDFilename, bbox, resx, resy, 
         @return Tuple(True if DEM data were fetched and False if not, URL of DEM fetched)
     """
     assert(format in SUPPORTED_FORMATS)
-    assert(coverage in SUPPORTED_COVERAGE.keys())
+    assert(coverage in list(SUPPORTED_COVERAGE.keys()))
     return getRasterForBoundingBox(config, outputDir, outNLCDFilename, HOST, URL_PROTO, MIME_TYPE, bbox, SUPPORTED_COVERAGE[coverage], srs, format,
                                    response_crs=srs, store=None, resx=resx, resy=resy, interpolation=INTERPOLATION, overwrite=overwrite)

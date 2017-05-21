@@ -105,7 +105,7 @@ class SoilGridAustralia(Command):
         
         # Write metadata entries
         cmdline = GenericMetadata.getCommandLine()
-        for attr in rasters.keys():
+        for attr in list(rasters.keys()):
             (filepath, url) = rasters[attr]
             filename = os.path.basename(filepath)
             asset = AssetProvenance(GenericMetadata.MANIFEST_SECTION)

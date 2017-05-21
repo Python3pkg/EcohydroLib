@@ -34,7 +34,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 @author Brian Miles <brian_miles@unc.edu>
 """
-import cStringIO
+import io
 import xml.sax
 import json
 
@@ -43,7 +43,7 @@ import socket
 import httplib2
 from oset import oset
 
-from saxhandlers import SSURGOMUKEYQueryHandler
+from .saxhandlers import SSURGOMUKEYQueryHandler
 
 _BUFF_LEN = 4096 * 10
 
@@ -55,7 +55,7 @@ ATTRIBUTE_LIST_NUMERIC = ['ksat', 'pctClay', 'pctSilt', 'pctSand', 'porosity',
                         'fieldCap', 'avlWatCap']
 # DERIVED_ATTRIBUTES must be a dictionary whose values are valid Python expressions combining members of ATTRIBUTE_LIST_NUMERIC
 DERIVED_ATTRIBUTES = { 'drnWatCont': 'porosity - fieldCap' }
-ATTRIBUTE_LIST_NUMERIC.extend( DERIVED_ATTRIBUTES.keys() )
+ATTRIBUTE_LIST_NUMERIC.extend( list(DERIVED_ATTRIBUTES.keys()) )
 
 def strListToString(strList):
     """ Converts a Python list of string values into a string containing quoted, 
@@ -68,7 +68,7 @@ def strListToString(strList):
     numStr = len(strList)
     assert(numStr > 0)
     
-    output = cStringIO.StringIO()
+    output = io.StringIO()
     for i in range(numStr - 1):
         output.write("'%s'," % (strList[i],))
     output.write("'%s'" % (strList[numStr-1],))
@@ -190,7 +190,7 @@ def computeWeightedAverageKsatClaySandSilt(soilAttrTuple):
         attrList = [mukey, ksat, pctClay, pctSilt, pctSand, porosity, pmgroupname, texture, texdesc,
                     fieldCap, avlWatCap]
         # Generate derived variables
-        for attr in DERIVED_ATTRIBUTES.keys():
+        for attr in list(DERIVED_ATTRIBUTES.keys()):
             derivedAttr = eval( DERIVED_ATTRIBUTES[attr] )
             derivedSet.add(attr)
             attrList.append(derivedAttr) 
@@ -199,8 +199,8 @@ def computeWeightedAverageKsatClaySandSilt(soilAttrTuple):
     avgSoilHeaders = list(ATTRIBUTE_LIST)
     avgSoilHeaders.insert(0, 'mukey')
     for derived in derivedSet:
-        print("Computed derived attribute %s = %s" % \
-              (derived, DERIVED_ATTRIBUTES[derived]) )
+        print(("Computed derived attribute %s = %s" % \
+              (derived, DERIVED_ATTRIBUTES[derived]) ))
         avgSoilHeaders.append(derived)
     
     return (avgSoilHeaders, avgSoilAttr)

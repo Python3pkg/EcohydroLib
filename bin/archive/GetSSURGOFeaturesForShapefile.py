@@ -14,7 +14,7 @@ import os
 import sys
 import errno
 import argparse
-import ConfigParser
+import configparser
 
 from spatialdatalib.utils import getBoundingBoxForShapefile
 from spatialdatalib.utils import convertGMLToShapefile
@@ -39,7 +39,7 @@ args = parser.parse_args()
 if not os.access(args.configfile, os.R_OK):
     raise IOError(errno.EACCES, "Unable to read configuration file %s" %
                   args.configfile)
-config = ConfigParser.RawConfigParser()
+config = configparser.RawConfigParser()
 config.read(args.configfile)
 
 if not os.access(args.shapefile, os.R_OK):
@@ -71,7 +71,7 @@ soilRasterResolutionY = args.soilrasterresolution[1]
 
 # Get bounding box
 bbox = getBoundingBoxForShapefile(shapefile)
-print "Bounding box: (%f, %f) (%f, %f)" % (bbox['minX'], bbox['minY'], bbox['maxX'], bbox['maxY'])
+print("Bounding box: (%f, %f) (%f, %f)" % (bbox['minX'], bbox['minY'], bbox['maxX'], bbox['maxY']))
 
 # Get SSURGO data
 gmlFilenames = getMapunitFeaturesForBoundingBox(outdir, bbox, mapunitExtended=True, tileBbox=False)

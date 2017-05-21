@@ -508,7 +508,7 @@ def getCatchmentFeaturesForReaches(config, outputDir,
         raise IOError(errno.EACCES, "Not allowed to write to output directory %s" % (outputDir,))
     outputDir = os.path.abspath(outputDir)
     
-    if not format in OGR_DRIVERS.keys():
+    if not format in list(OGR_DRIVERS.keys()):
         raise Exception("Output format '%s' is not known" % (format,) )
     
     catchmentFilename ="%s%s%s" % ( catchmentFilename, os.extsep, OGR_DRIVERS[format] )

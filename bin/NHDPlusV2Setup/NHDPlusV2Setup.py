@@ -51,7 +51,7 @@ import errno
 import argparse
 import subprocess
 import sqlite3
-import ConfigParser
+import configparser
 
 from ecohydrolib.dbf import dbfreader
 
@@ -79,7 +79,7 @@ parser.add_argument('-s4', '--skipGageLoc', dest='skipGageLoc', action='store_tr
                     help='Skip step where GageLoc database is created')
 args = parser.parse_args()
 
-config = ConfigParser.RawConfigParser()
+config = configparser.RawConfigParser()
 config.read(args.configfile)
 
 if not config.has_option('GDAL/OGR', 'PATH_OF_OGR2OGR'):
@@ -112,7 +112,7 @@ nhdPlusDB = os.path.join(args.outputDir, "NHDPlusDB.sqlite")
 
 # 0. Unpacking NHDPlus archives into output directory
 if not args.skipUnzip:
-    print("Unpacking NHDPlus archives into output directory %s" % (args.outputDir,))
+    print(("Unpacking NHDPlus archives into output directory %s" % (args.outputDir,)))
 
     # Get a list of zip files
     zipFiles = subprocess.check_output("%s %s -type f -name *.7z -print" % (pathOfFind, args.archiveDir,), shell=True).split()
@@ -121,7 +121,7 @@ if not args.skipUnzip:
     for file in zipFiles:
         sevenZCommand = "%s x -y -o%s %s" % \
             (pathOfSevenZip, args.outputDir, file)
-        print sevenZCommand
+        print(sevenZCommand)
         returnCode = os.system(sevenZCommand)
         assert(returnCode == 0)
 
@@ -179,7 +179,7 @@ if not args.skipCatchment:
     sys.stdout.write("\r\tProcessing file %d of %d (%.0f%%)\n" % (currFile, numFiles, pctComplete))
 
     # 4. Add index to CONUS catchment
-    print "Indexing CONUS shapefile (this may take a while) ..."
+    print("Indexing CONUS shapefile (this may take a while) ...")
     sqliteCommand = "%s %s 'CREATE INDEX IF NOT EXISTS featureid_idx on catchment (featureid)'" % (pathOfSqlite, conusCatchment)
     returnCode = os.system(sqliteCommand)
     assert(returnCode == 0)
@@ -363,7 +363,7 @@ if not args.skipDB:
             cursor.execute("""INSERT INTO PlusFlowlineVAA
     (ComID,Fdate,StreamLeve,StreamOrde,StreamCalc,FromNode,ToNode,Hydroseq,LevelPathI,Pathlength,TerminalPa,ArbolateSu,Divergence,StartFlag,TerminalFl,DnLevel,ThinnerCod,UpLevelPat,UpHydroseq,DnLevelPat,DnMinorHyd,DnDrainCou,DnHydroseq,FromMeas,ToMeas,ReachCode,LengthKM,Fcode,RtnDiv,OutDiv,DivEffect,VPUIn,VPUOut,TravTime,PathTime,AreaSqKM,TotDASqKM,DivDASqKM)
     VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",
-            (record[0], record[1].strftime("%Y-%m-%d %H:%M:%S"), record[2], record[3], record[4], record[5], record[6], record[7], record[8], float(record[9]), record[10], float(record[11]), record[12], record[13], record[14], record[15], record[16], record[17], record[18], record[19], record[20], record[21], record[22], float(record[23]), float(record[24]), unicode(record[25], errors='replace'), float(record[26]), record[27], record[28], record[29], record[30], record[31], record[32], float(record[33]), float(record[34]), float(record[35]), float(record[36]), float(record[37])))
+            (record[0], record[1].strftime("%Y-%m-%d %H:%M:%S"), record[2], record[3], record[4], record[5], record[6], record[7], record[8], float(record[9]), record[10], float(record[11]), record[12], record[13], record[14], record[15], record[16], record[17], record[18], record[19], record[20], record[21], record[22], float(record[23]), float(record[24]), str(record[25], errors='replace'), float(record[26]), record[27], record[28], record[29], record[30], record[31], record[32], float(record[33]), float(record[34]), float(record[35]), float(record[36]), float(record[37])))
     conn.commit()
     cursor.close()
     
@@ -419,7 +419,7 @@ if not args.skipDB:
             cursor.execute("""INSERT INTO NHDReachCode_Comid
     (COMID,REACHCODE,REACHSMDAT,RESOLUTION,GNIS_ID,GNIS_NAME)
     VALUES (?,?,?,?,?,?)""",
-            (record[0], unicode(record[1], errors='replace'), record[2].strftime("%Y-%m-%d %H:%M:%S"), unicode(record[3], errors='replace'), record[4], unicode(record[5], errors='replace')))
+            (record[0], str(record[1], errors='replace'), record[2].strftime("%Y-%m-%d %H:%M:%S"), str(record[3], errors='replace'), record[4], str(record[5], errors='replace')))
     conn.commit()
     cursor.close()
     
@@ -453,7 +453,7 @@ if not args.skipDB:
             cursor.execute("""INSERT INTO NHDFlowline
     (COMID,FDATE,RESOLUTION,GNIS_ID,GNIS_NAME,LENGTHKM,REACHCODE,FLOWDIR,WBAREACOMI,FTYPE,FCODE,SHAPE_LENG,ENABLED,GNIS_NBR)
     VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",
-            (record[0], record[1].strftime("%Y-%m-%d %H:%M:%S"), unicode(record[2], errors='replace'), record[3], unicode(record[4], errors='replace'), float(record[5]), unicode(record[6], errors='replace'), unicode(record[7], errors='replace'), record[8], unicode(record[9], errors='replace'), record[10], float(record[11]), unicode(record[12], errors='replace'), GNIS_NBR))
+            (record[0], record[1].strftime("%Y-%m-%d %H:%M:%S"), str(record[2], errors='replace'), record[3], str(record[4], errors='replace'), float(record[5]), str(record[6], errors='replace'), str(record[7], errors='replace'), record[8], str(record[9], errors='replace'), record[10], float(record[11]), str(record[12], errors='replace'), GNIS_NBR))
     conn.commit()
     cursor.close()
     
@@ -465,7 +465,7 @@ if not args.skipDB:
     cursor = conn.cursor()
     dbf = subprocess.check_output("%s %s -type f -iname GageLoc.dbf -print" % (pathOfFind, args.outputDir,), shell=True).split()[0]
     assert(dbf)
-    print dbf
+    print(dbf)
     f = open(dbf, 'rb')
     db = list(dbfreader(f))
     f.close()
@@ -475,7 +475,7 @@ if not args.skipDB:
         cursor.execute("""INSERT INTO Gage_Loc
     (ComID,EventDate,ReachCode,ReachSMDat,Reachresol,FeatureCom,FeatureCla,Source_Ori,Source_Dat,Source_Fea,Featuredet,Measure,Offset,EventType)
     VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",
-        (record[0], record[1].strftime("%Y-%m-%d %H:%M:%S"), unicode(record[2], errors='replace'), record[3], unicode(record[4], errors='replace'), record[5], record[6], unicode(record[7], errors='replace'), unicode(record[8], errors='replace'), unicode(record[9], errors='replace'), unicode(record[10], errors='replace'), float(record[11]), record[12], unicode(record[13], errors='replace')))
+        (record[0], record[1].strftime("%Y-%m-%d %H:%M:%S"), str(record[2], errors='replace'), record[3], str(record[4], errors='replace'), record[5], record[6], str(record[7], errors='replace'), str(record[8], errors='replace'), str(record[9], errors='replace'), str(record[10], errors='replace'), float(record[11]), record[12], str(record[13], errors='replace')))
     conn.commit()
     cursor.close()
     
@@ -484,7 +484,7 @@ if not args.skipDB:
     cursor = conn.cursor()
     dbf = subprocess.check_output("%s %s -type f -iname GageInfo.dbf -print" % (pathOfFind, args.outputDir,), shell=True).split()[0]
     assert(dbf)
-    print dbf
+    print(dbf)
     f = open(dbf, 'rb')
     db = list(dbfreader(f))
     f.close()
@@ -496,12 +496,12 @@ if not args.skipDB:
             cursor.execute("""INSERT INTO Gage_Info
         (GageID,Agency_cd,Station_NM,State_CD,State,SiteStatus,DA_SQ_Mile,Lon_Site,Lat_Site,Lon_NHD,Lat_NHD,Reviewed)
         VALUES (?,?,?,?,?,?,?,?,?,?,?,?)""",
-            (unicode(record[0],errors='replace'), unicode(record[1], errors='replace'), unicode(record[2], errors='replace'), unicode(record[3], errors='replace'), unicode(record[4], errors='replace'), unicode(record[5], errors='replace'), float(record[6]), float(record[7]), float(record[8]), float(record[9]), float(record[10]), unicode(record[12], errors='replace') ))
+            (str(record[0],errors='replace'), str(record[1], errors='replace'), str(record[2], errors='replace'), str(record[3], errors='replace'), str(record[4], errors='replace'), str(record[5], errors='replace'), float(record[6]), float(record[7]), float(record[8]), float(record[9]), float(record[10]), str(record[12], errors='replace') ))
         else:
             cursor.execute("""INSERT INTO Gage_Info
         (GageID,Agency_cd,Station_NM,State_CD,State,SiteStatus,DA_SQ_Mile,Lon_Site,Lat_Site,Lon_NHD,Lat_NHD,Reviewed)
         VALUES (?,?,?,?,?,?,?,?,?,?,?,?)""",
-            (unicode(record[0],errors='replace'), unicode(record[1], errors='replace'), unicode(record[2], errors='replace'), unicode(record[3], errors='replace'), unicode(record[4], errors='replace'), unicode(record[5], errors='replace'), float(record[6]), float(record[7]), float(record[8]), float(record[9]), float(record[10]), unicode(record[11], errors='replace') ))
+            (str(record[0],errors='replace'), str(record[1], errors='replace'), str(record[2], errors='replace'), str(record[3], errors='replace'), str(record[4], errors='replace'), str(record[5], errors='replace'), float(record[6]), float(record[7]), float(record[8]), float(record[9]), float(record[10]), str(record[11], errors='replace') ))
     conn.commit()
     cursor.close()
     
@@ -510,7 +510,7 @@ if not args.skipDB:
     cursor = conn.cursor()
     dbf = subprocess.check_output("%s %s -type f -iname Gage_Smooth.DBF -print" % (pathOfFind, args.outputDir,), shell=True).split()[0]
     assert(dbf)
-    print dbf
+    print(dbf)
     f = open(dbf, 'rb')
     db = list(dbfreader(f))
     f.close()
@@ -520,7 +520,7 @@ if not args.skipDB:
         cursor.execute("""INSERT INTO Gage_Smooth
     (SITE_NO,YEAR,MO,AVE,COMPLETERE)
     VALUES (?,?,?,?,?)""",
-        (unicode(record[0], errors='replace'), record[1], record[2], float(record[3]), float(record[4]) ))
+        (str(record[0], errors='replace'), record[1], record[2], float(record[3]), float(record[4]) ))
     conn.commit()
     cursor.close()
     

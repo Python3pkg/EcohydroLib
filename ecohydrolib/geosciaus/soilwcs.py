@@ -36,7 +36,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 import os, sys, errno
 import tempfile
 import shutil
-import ConfigParser
+import configparser
 from subprocess import *
 
 from owslib.wcs import WebCoverageService
@@ -78,7 +78,7 @@ def ordinalToAlpha(ordinal):
     assert(ordinal >= 1)
     assert(ordinal <= 26)
     o = ordinal + 64 # Map to ASCII/UNICODE value for capital letters
-    return unichr(o)
+    return chr(o)
     
 
 # Example URL: http://www.asris.csiro.au/ArcGis/services/TERN/CLY_ACLEP_AU_TRN_N/MapServer/WCSServer?SERVICE=WCS&VERSION=1.0.0&REQUEST=GetCoverage&COVERAGE=CLY_000_005_EV_N_P_AU_TRN_N_1&FORMAT=GeoTIFF&BBOX=147.539,-37.024,147.786,-36.830&RESX=0.000277777777778&RESY=0.000277777777778&CRS=EPSG:4283&RESPONSE_CRS=EPSG:4326&INTERPOLATION=bilinear&Band=1
@@ -88,7 +88,7 @@ def ordinalToAlpha(ordinal):
 # Sand: http://www.asris.csiro.au/ArcGis/services/TERN/SND_ACLEP_AU_TRN_N/MapServer/WCSServer?SERVICE=WCS&REQUEST=GetCapabilities
 
 def _getCoverageIDsAndWeightsForCoverageTitle(wcs, variable):
-    coverages = wcs.items()
+    coverages = list(wcs.items())
     coverage_ids = {}
     coverage_weights = {}
     for coverage in coverages:
@@ -158,7 +158,7 @@ def getSoilsRasterDataForBoundingBox(config, outputDir, bbox,
     gdalBase = None
     try:
         gdalBase = config.get('GDAL/OGR', 'GDAL_BASE')
-    except ConfigParser.NoOptionError:
+    except configparser.NoOptionError:
         gdalBase = os.path.dirname(config.get('GDAL/OGR', 'PATH_OF_GDAL_WARP'))
     
     gdalCmdPath = os.path.join(gdalBase, 'gdal_calc.py')
@@ -173,7 +173,7 @@ def getSoilsRasterDataForBoundingBox(config, outputDir, bbox,
     bbox = [bbox['minX'], bbox['minY'], bbox['maxX'], bbox['maxY']]
     
     # For each soil variable, download desired depth layers
-    for v in VARIABLE.keys():
+    for v in list(VARIABLE.keys()):
         variable = VARIABLE[v]
         
         soilPropertyName = "soil_raster_pct{var}".format(var=v)
@@ -198,7 +198,7 @@ def getSoilsRasterDataForBoundingBox(config, outputDir, bbox,
         
         outfiles = []
         weights = []
-        for c in coverages.keys():
+        for c in list(coverages.keys()):
             coverage = coverages[c]
             weights.append(weights_abs[c])
             #coverage = c.format(variable=variable)

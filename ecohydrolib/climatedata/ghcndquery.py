@@ -37,7 +37,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 """
 import os, errno
 import re
-import httplib
+import http.client
 from pyspatialite import dbapi2 as spatialite
 
 
@@ -84,7 +84,7 @@ def findStationsWithinBoundingBox(config, bbox):
     cursor = conn.cursor()
     # Spatialite/SQLite3 won't subsitute parameter strings within quotes, so we have to do it the unsafe way.  This should be okay as
     # we are dealing with numeric values that we are converting to numeric types before building the query string.
-    sql = u"SELECT id,AsText(coord),elevation_m,name FROM ghcn_station WHERE Within(coord, BuildMbr(%f,%f,%f,%f));" %\
+    sql = "SELECT id,AsText(coord),elevation_m,name FROM ghcn_station WHERE Within(coord, BuildMbr(%f,%f,%f,%f));" %\
     (bbox['minX'], bbox['minY'], bbox['maxX'], bbox['maxY'])
     cursor.execute(sql)
     results = cursor.fetchall()
@@ -130,7 +130,7 @@ def findStationNearestToCoordinates(config, longitude, latitude):
     cursor = conn.cursor()
     # Spatialite/SQLite3 won't subsitute parameter strings within quotes, so we have to do it the unsafe way.  This should be okay as
     # we are dealing with numeric values that we are converting to numeric types before building the query string.
-    sql = u"SELECT id,AsText(coord),elevation_m,name,Distance(GeomFromText('POINT(%f %f)', %d), coord) as dist FROM ghcn_station order by dist asc limit 1" %\
+    sql = "SELECT id,AsText(coord),elevation_m,name,Distance(GeomFromText('POINT(%f %f)', %d), coord) as dist FROM ghcn_station order by dist asc limit 1" %\
     (float(longitude), float(latitude), _SRS)
     cursor.execute(sql)
     nearest = cursor.fetchone()
@@ -181,7 +181,7 @@ def getClimateDataForStation(config, outputDir, outFilename, stationID, overwrit
     
     url = URL_PROTO.format(station_id=stationID)
     
-    conn = httplib.HTTPConnection(HOST)
+    conn = http.client.HTTPConnection(HOST)
     conn.request('GET', url)
     res = conn.getresponse(buffering=True)
     

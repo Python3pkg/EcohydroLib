@@ -93,7 +93,7 @@ def writeDictToXMLFile(outfile, target, dict):
         values. Units will be written as empty elements for each AVU written
     """
     targetStr = "\t\t<Target>%s</Target>\n" % (escape(target),)
-    for key in dict.keys():
+    for key in list(dict.keys()):
         outfile.write('\t<AVU>\n')
         outfile.write(targetStr)
         outfile.write("\t\t<Attribute>%s</Attribute>\n" % (escape(key),) )

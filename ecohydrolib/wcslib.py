@@ -37,7 +37,7 @@ import os, errno
 import sys
 
 import socket
-import httplib
+import http.client
 import textwrap
 
 from ecohydrolib.spatialdata.utils import deleteGeoTiff
@@ -111,7 +111,7 @@ def getRasterForBoundingBox(config, outputDir, outFilename, host, urlProto, mime
                           response_crs=srs, store=store, resx=resx, resy=resy, interpolation=interpolation)
     urlFetched = "http://%s%s" % (host, url)
 
-    conn = httplib.HTTPConnection(host)
+    conn = http.client.HTTPConnection(host)
     try:
         conn.request('GET', url)
         res = conn.getresponse(buffering=True)

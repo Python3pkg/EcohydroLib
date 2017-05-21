@@ -120,7 +120,7 @@ rasterFiles = inferSoilPropertiesForSSURGOAndTerrainData(config=context.config, 
 sys.stdout.write('done\n')
 
 # Write metadata entries
-for attr in rasterFiles.keys():
+for attr in list(rasterFiles.keys()):
     asset = AssetProvenance(GenericMetadata.MANIFEST_SECTION)
     asset.name = "soil_raster_%s" % (attr,)
     asset.dcIdentifier = rasterFiles[attr]

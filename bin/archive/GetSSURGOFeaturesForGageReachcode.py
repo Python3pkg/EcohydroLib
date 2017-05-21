@@ -16,7 +16,7 @@ import os
 import sys
 import errno
 import argparse
-import ConfigParser
+import configparser
 
 from wcs4demlib.demquery import getDEMForBoundingBox
 from nhdplus2lib.networkanalysis import getBoundingBoxForCatchmentsForGage
@@ -52,7 +52,7 @@ if not os.access(args.configfile, os.R_OK):
     raise IOError(errno.EACCES, "Unable to read configuration file %s" %
                   args.configfile)
 
-config = ConfigParser.RawConfigParser()
+config = configparser.RawConfigParser()
 config.read(args.configfile)
 
 if not config.has_option('GDAL/OGR', 'PATH_OF_OGR2OGR'):
@@ -89,7 +89,7 @@ if not os.access(solimCmdPath, os.X_OK):
 
 # Get bounding box
 bbox = getBoundingBoxForCatchmentsForGage(config, outdir, args.reachcode, args.measure)
-print "Bounding box for gage %s measure %f: %f,%f,%f,%f" % (args.reachcode, args.measure, bbox['minX'], bbox['minY'], bbox['maxX'], bbox['maxY'])
+print("Bounding box for gage %s measure %f: %f,%f,%f,%f" % (args.reachcode, args.measure, bbox['minX'], bbox['minY'], bbox['maxX'], bbox['maxY']))
 
 # Get DEM from DEMExplorer
 demFilename = "DEM_%s.tif" % (args.reachcode)
